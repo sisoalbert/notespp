@@ -1,19 +1,15 @@
 package com.questerstudios.notespp;
 
 import android.os.Bundle;
-import androidx.activity.EdgeToEdge;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
@@ -28,13 +24,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         editTextTask = findViewById(R.id.editTextTask);
         buttonAdd = findViewById(R.id.buttonAdd);
@@ -56,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(MainActivity.this, "Please enter a task", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        listViewTasks.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                String removedTask = tasks.remove(position);
+                adapter.notifyDataSetChanged();
+                Toast.makeText(MainActivity.this, "Deleted: " + removedTask, Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
     }
